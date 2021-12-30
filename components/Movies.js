@@ -7,9 +7,9 @@ const Movies = () => {
   const [query, setQuery] = useState("");
 
   const TOP_API =
-    "https://api.themoviedb.org/3/discover/movie?api_key=cbf7e1167c533eaa4ed56af5cd8aeb85&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate";
+    "https://api.themoviedb.org/4/discover/movie?api_key=cbf7e1167c533eaa4ed56af5cd8aeb85&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1&with_watch_monetization_types=flatrate";
   const SEARCH_API =
-    "https://api.themoviedb.org/3/search/movie?api_key=cbf7e1167c533eaa4ed56af5cd8aeb85&query=";
+    "https://api.themoviedb.org/4/search/movie?api_key=cbf7e1167c533eaa4ed56af5cd8aeb85&query=";
 
   const getMovies = (API) => {
     axios.get(API).then((response) => setMovies(response.data.results));
@@ -29,14 +29,19 @@ const Movies = () => {
     }
   };
 
+  const dateString = (dateNum) => {
+    const date = new Date(dateNum).toString();
+    return `${date.slice(4, 15)}`;
+  };
+
   return (
     <div>
-      <div className="flex flex-row justify-start font-bold p-5 border-b text-slate-700 bg-slate-50 w-full">
+      <div className="flex flex-row justify-start font-bold p-5 border-b text-slate-700 bg-slate-50">
         <form onSubmit={handleSubmit} className="w-full">
           <input
             value={query}
             placeholder="Search..."
-            className="p-2 w-80 rounded-lg border shadow-sm outline-none"
+            className="flex items-center justify-center p-2 w-80 rounded-lg border shadow-sm outline-none"
             onChange={(e) => setQuery(e.target.value)}
           ></input>
         </form>
@@ -51,6 +56,7 @@ const Movies = () => {
           return (
             <div
               className={`flex flex-row md:w-[26rem] w-80 font-semibold text-left border bg-slate-50 hover:bg-slate-100 rounded-lg shadow-sm transition-colors cursor-pointer`}
+              onClick={() => {location.href = `/movie/${movie.id}`}}
             >
               <img
                 className="w-32 h-auto rounded-l-lg shadow-sm"
@@ -61,8 +67,13 @@ const Movies = () => {
                   {movie.original_title}
                 </span>
                 <span className="font-normal text-slate-500">
-                  {movie.release_date}
+                  {dateString(movie.release_date)}
                 </span>
+                <div className="mt-1">
+                  <span className="font-normal text-slate-500 py-0.5 px-1.5 bg-slate-100 ring-1 ring-gray-200 rounded dark:ring-gray-600">
+                    {movie.vote_average}
+                  </span>
+                </div>
               </div>
             </div>
           );
@@ -73,26 +84,3 @@ const Movies = () => {
 };
 
 export default Movies;
-
-{
-  /* <figure class="md:flex bg-gray-100 rounded-xl p-8 md:p-0 dark:bg-gray-800">
-  <img class="w-24 h-24 md:w-48 md:h-auto md:rounded-none rounded-full mx-auto" src="/sarah-dayan.jpg" alt="" width="384" height="512">
-  <div class="pt-6 md:p-8 text-center md:text-left space-y-4">
-    <blockquote>
-      <p class="text-lg font-medium">
-        “Tailwind CSS is the only framework that I've seen scale
-        on large teams. It’s easy to customize, adapts to any design,
-        and the build size is tiny.”
-      </p>
-    </blockquote>
-    <figcaption class="font-medium">
-      <div class="text-sky-500 dark:text-sky-400">
-        Sarah Dayan
-      </div>
-      <div class="text-gray-700 dark:text-gray-500">
-        Staff Engineer, Algolia
-      </div>
-    </figcaption>
-  </div>
-</figure> */
-}
